@@ -133,7 +133,7 @@
       "gigs.nextCta": "IK BEN ERBIJ",
       "gigs.posterCta": "Affiche",
       "gigs.posterAria": "Bekijk de affiche van",
-      "gigs.none": "Momenteel staan er geen optredens gepland. Neem contact op om ons te boeken.",
+      "gigs.none": "Momenteel zijn we druk aan het repeteren voor onze nieuwe show van 2027.",
       "gigs.recentTitle": "Recent gespeeld",
 
       "booking.step1Title": "Neem contact op",
@@ -275,7 +275,7 @@
       "gigs.nextCta": "BE THERE",
       "gigs.posterCta": "Poster",
       "gigs.posterAria": "View the poster for",
-      "gigs.none": "No gigs are currently scheduled. Get in touch to book us.",
+      "gigs.none": "We're currently busy rehearsing our new show for 2027.",
       "gigs.recentTitle": "Recently Played",
 
       "booking.step1Title": "Contact Us",

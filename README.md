@@ -89,8 +89,8 @@ Behaviour worth knowing:
 - **`private: true`** keeps a gig visible on the site but out of the structured data,
   so it will not appear in Google event results. Private gigs are also never featured
   and are left out of "Recently played".
-- If every gig has passed, the section shows a booking prompt, followed by the
-  "Recently played" list.
+- If every gig has passed, the section shows a short message instead (`gigs.none` in
+  the translations), followed by the "Recently played" list.
 
 To add a poster, drop the image in `assets/images/` and reference it in the `poster`
 field. Filenames are case-sensitive on GitHub Pages, so they must match exactly.
