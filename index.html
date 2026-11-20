@@ -191,7 +191,7 @@
             <a class="btn btn-primary" href="#contact" data-i18n-key="hero.ctaPrimary">Boek de Band</a>
             <a class="btn btn-secondary" href="#gigs-booking" data-i18n-key="hero.ctaSecondary">Bekijk Optredens</a>
           </div>
-          <a class="hero-listen" href="#listen" data-play-teaser>
+          <a class="hero-listen" href="#teaser" data-play-teaser>
             <span class="hero-listen-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5.5v13l10.5-6.5z" /></svg>
             </span>
@@ -261,6 +261,42 @@
     <section id="repertoire" class="section reveal">
       <div class="container">
         <h2 data-i18n-key="repertoire.title">Repertoire</h2>
+
+        <!--
+          Teaser player. Without JavaScript the browser's own audio controls show;
+          script.js swaps them for the styled play button and progress bar.
+          preload="none": the 4 MB file only downloads when someone presses play.
+        -->
+        <div class="teaser-player" id="teaser" data-duration="174">
+          <button type="button" class="teaser-play" aria-label="Speel de teaser af">
+            <svg class="teaser-icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+            <svg class="teaser-icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
+          </button>
+          <div class="teaser-info">
+            <p class="teaser-heading">
+              <span class="audio-badge" data-i18n-key="listen.badge">Teaser</span>
+              <span class="teaser-title">Mashup</span>
+            </p>
+            <p class="teaser-sub" data-i18n-key="listen.intro">Een voorproefje van hoe we klinken.</p>
+          </div>
+          <div class="teaser-track">
+            <input
+              type="range"
+              class="teaser-progress"
+              min="0"
+              max="174"
+              step="0.1"
+              value="0"
+              aria-label="Positie in de teaser"
+              data-i18n-aria-label-key="listen.seek"
+            />
+            <span class="teaser-time">0:00 / 2:54</span>
+          </div>
+          <audio id="teaserAudio" controls preload="none" src="assets/audio/shadies-and-the-lady-teaser.mp3">
+            <a href="assets/audio/shadies-and-the-lady-teaser.mp3" data-i18n-key="listen.fallback">Download de teaser (MP3)</a>
+          </audio>
+        </div>
+
         <p class="section-intro" data-i18n-key="repertoire.intro">Een selectie uit ons live repertoire:</p>
         <div class="repertoire-grid">
           <article class="repertoire-card">
@@ -310,24 +346,6 @@
             </ul>
           </article>
         </div>
-      </div>
-    </section>
-
-    <section id="listen" class="section reveal">
-      <div class="container">
-        <h2 data-i18n-key="listen.title">Luister</h2>
-        <p class="section-intro" data-i18n-key="listen.intro">Een eerste voorproefje van hoe we klinken. Meer opnames volgen binnenkort.</p>
-        <figure class="audio-card">
-          <figcaption class="audio-meta">
-            <span class="audio-badge" data-i18n-key="listen.badge">Teaser</span>
-            <span class="audio-title">Mashup</span>
-            <span class="audio-length">2:54</span>
-          </figcaption>
-          <!-- preload="none": the 4 MB file only downloads when someone presses play. -->
-          <audio id="teaserAudio" controls preload="none" src="assets/audio/shadies-and-the-lady-teaser.mp3">
-            <a href="assets/audio/shadies-and-the-lady-teaser.mp3" data-i18n-key="listen.fallback">Download de teaser (MP3)</a>
-          </audio>
-        </figure>
       </div>
     </section>
 

@@ -27,7 +27,7 @@ css/style.css       All styling
 js/script.js        Translations, gig calendar, interactions
 assets/images/      Hero photo, headshots, gallery photos, posters, logo
 assets/fonts/       Self-hosted Bebas Neue and Manrope (SIL Open Font License)
-assets/audio/       Teaser recording (MP3) for the Listen section
+assets/audio/       Teaser recording (MP3), played in the Repertoire section
 ```
 
 ## Main Features
@@ -42,7 +42,8 @@ assets/audio/       Teaser recording (MP3) for the Listen section
 - "Recently played" list built from past gigs
 - Event posters that expand to full size when clicked
 - Photo gallery with lightbox (arrows, swipe, Escape, keyboard support)
-- Listen section with the teaser recording; the hero link scrolls to it and starts playback
+- Teaser player at the top of the Repertoire section, styled to match the site; the
+  "listen" link in the hero scrolls to it and starts playback
 - Custom 404 page
 - Contact form integrated with Formspree
 - Inline booking flow inside the form (3 steps)
@@ -137,8 +138,10 @@ month abbreviations do not need translating by hand.
 ## Audio
 
 The teaser lives at `assets/audio/shadies-and-the-lady-teaser.mp3` and is played by
-the `<audio>` element in the Listen section of `index.html`. The player uses
-`preload="none"`, so the file only downloads when someone presses play.
+the player with `id="teaser"` at the top of the Repertoire section in `index.html`.
+`script.js` replaces the browser's own audio controls with a styled play button and
+progress bar. The `<audio>` element uses `preload="none"`, so the file only
+downloads when someone presses play.
 
 To replace or add a recording:
 
@@ -146,7 +149,8 @@ To replace or add a recording:
   `ffmpeg -i input.wav -ar 44100 -c:a libmp3lame -q:a 2 output.mp3`.
 - Keep the original WAV files out of this folder. They are large (the teaser WAV is
   69 MB) and GitHub's upload page refuses files over 25 MB.
-- Update the title and the length shown next to the player in `index.html`.
+- Update the title, `data-duration` (in seconds) and the time shown in the player in
+  `index.html`.
 
 ## Images
 
@@ -183,7 +187,7 @@ Current recommended release stage:
 
 ## Planned Next Improvements
 
-- YouTube video in the Listen section
+- YouTube video
 - Optional technical rider as downloadable PDF (on request)
 - Optional captcha if spam appears
 - Optional analytics/privacy banner if needed

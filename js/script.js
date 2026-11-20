@@ -21,6 +21,7 @@
   var SUPPORTED_LANGUAGES = ["en", "nl"];
   var memberBioRefreshHandler = null;
   var gigsRefreshHandler = null;
+  var teaserRefreshHandler = null;
 
   var MONTH_ABBREVIATIONS = {
     nl: ["JAN", "FEB", "MRT", "APR", "MEI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEC"],
@@ -119,9 +120,11 @@
       "repertoire.ninetiesTitle": "90s / 00s",
       "repertoire.modernTitle": "Modern & Publieksfavorieten",
 
-      "listen.title": "Luister",
-      "listen.intro": "Een eerste voorproefje van hoe we klinken. Meer opnames volgen binnenkort.",
+      "listen.intro": "Een voorproefje van hoe we klinken.",
       "listen.badge": "Teaser",
+      "listen.play": "Speel de teaser af",
+      "listen.pause": "Pauzeer de teaser",
+      "listen.seek": "Positie in de teaser",
       "listen.fallback": "Download de teaser (MP3)",
 
       "gigsBooking.title": "Optredens & Boeken",
@@ -259,9 +262,11 @@
       "repertoire.ninetiesTitle": "90s / 00s",
       "repertoire.modernTitle": "Modern & Crowd Favorites",
 
-      "listen.title": "Listen",
-      "listen.intro": "A first taste of how we sound. More recordings coming soon.",
+      "listen.intro": "A taste of how we sound.",
       "listen.badge": "Teaser",
+      "listen.play": "Play the teaser",
+      "listen.pause": "Pause the teaser",
+      "listen.seek": "Position in the teaser",
       "listen.fallback": "Download the teaser (MP3)",
 
       "gigsBooking.title": "Gigs & Booking",
@@ -457,6 +462,10 @@
 
     if (typeof gigsRefreshHandler === "function") {
       gigsRefreshHandler(lang);
+    }
+
+    if (typeof teaserRefreshHandler === "function") {
+      teaserRefreshHandler(lang);
     }
   }
 
@@ -1132,23 +1141,91 @@
     };
   }
 
-  // The hero "listen" link scrolls to the player (normal anchor) and starts the teaser.
-  function initializeTeaserLink() {
+  // Styled teaser player: play/pause button, progress bar and time, on top of a hidden <audio>.
+  // Without JavaScript the browser's own audio controls stay visible instead.
+  function initializeTeaserPlayer() {
+    var player = document.getElementById("teaser");
     var audio = document.getElementById("teaserAudio");
-    if (!audio) {
+    if (!player || !audio) {
       return;
     }
 
+    var button = player.querySelector(".teaser-play");
+    var progress = player.querySelector(".teaser-progress");
+    var timeLabel = player.querySelector(".teaser-time");
+    var fallbackDuration = Number(player.getAttribute("data-duration")) || 0;
+
+    function currentLanguage() {
+      var lang = document.documentElement.getAttribute("data-current-lang");
+      return isSupportedLanguage(lang) ? lang : DEFAULT_LANGUAGE;
+    }
+
+    function formatTime(seconds) {
+      var whole = Math.max(0, Math.floor(seconds || 0));
+      return Math.floor(whole / 60) + ":" + ("0" + (whole % 60)).slice(-2);
+    }
+
+    function getDuration() {
+      return isFinite(audio.duration) && audio.duration > 0 ? audio.duration : fallbackDuration;
+    }
+
+    function updateButton() {
+      var isPlaying = !audio.paused && !audio.ended;
+      player.classList.toggle("is-playing", isPlaying);
+      button.setAttribute("aria-label", t(isPlaying ? "listen.pause" : "listen.play", currentLanguage()));
+    }
+
+    function updateProgress() {
+      var duration = getDuration();
+      var position = audio.currentTime || 0;
+      progress.max = String(duration);
+      progress.value = String(position);
+      progress.style.setProperty("--progress", (duration ? (position / duration) * 100 : 0) + "%");
+      timeLabel.textContent = formatTime(position) + " / " + formatTime(duration);
+    }
+
+    function play() {
+      var playback = audio.play();
+      if (playback && typeof playback.catch === "function") {
+        playback.catch(function () {
+          updateButton();
+        });
+      }
+    }
+
+    audio.controls = false;
+    player.classList.add("is-enhanced");
+
+    button.addEventListener("click", function () {
+      if (audio.paused || audio.ended) {
+        play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    progress.addEventListener("input", function () {
+      audio.currentTime = Number(progress.value);
+      updateProgress();
+    });
+
+    ["play", "pause", "ended"].forEach(function (name) {
+      audio.addEventListener(name, updateButton);
+    });
+    ["timeupdate", "loadedmetadata", "durationchange", "seeked"].forEach(function (name) {
+      audio.addEventListener(name, updateProgress);
+    });
+
+    // The hero "listen" link scrolls to the player (normal anchor) and starts the teaser.
     document.querySelectorAll("[data-play-teaser]").forEach(function (link) {
       link.addEventListener("click", function () {
-        var playback = audio.play();
-        if (playback && typeof playback.catch === "function") {
-          playback.catch(function () {
-            /* Autoplay refused or file missing: the player is still there to press. */
-          });
-        }
+        play();
       });
     });
+
+    teaserRefreshHandler = updateButton;
+    updateButton();
+    updateProgress();
   }
 
   function setFormStatus(type, message) {
@@ -1312,7 +1389,7 @@
   initializeMemberBioToggle();
   initializeGigs();
   initializeGalleryLightbox();
-  initializeTeaserLink();
+  initializeTeaserPlayer();
   initializeCopyEmail();
   initializeContactForm();
 })();
