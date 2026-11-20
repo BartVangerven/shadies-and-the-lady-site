@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--
+  File purpose: Custom "page not found" page. GitHub Pages shows this for any address
+  that does not exist. Paths start with "/" because this page can be shown at any depth.
+-->
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Pagina niet gevonden | Shadies &amp; The Lady</title>
+  <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/Shadies-and-the-lady_favicon.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/images/favicon-96.png" />
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png" />
+  <style>
+    .not-found {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .not-found-logo {
+      width: 132px;
+      height: 132px;
+      margin: 0 auto 1.6rem;
+      border-radius: 18px;
+      border: 1px solid rgba(242, 196, 155, 0.35);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .not-found-code {
+      margin: 0;
+      font-family: "Bebas Neue", Impact, sans-serif;
+      font-size: clamp(5.5rem, 22vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      color: var(--color-accent);
+    }
+
+    .not-found h1 {
+      font-size: clamp(2.2rem, 7vw, 3.4rem);
+      margin: 0.4rem 0 0.6rem;
+    }
+
+    .not-found p {
+      max-width: 44ch;
+      margin-inline: auto;
+    }
+
+    .not-found .lang-en {
+      margin-top: 0.4rem;
+      font-size: 0.92rem;
+      color: #a99d92;
+    }
+
+    .not-found .hero-actions {
+      justify-content: center;
+      margin-top: 1.8rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="not-found">
+    <div class="container">
+      <a href="/" aria-label="Shadies &amp; The Lady – home">
+        <img
+          class="not-found-logo"
+          src="/assets/images/Shadies-and-the-lady.svg"
+          alt=""
+          width="132"
+          height="132"
+        />
+      </a>
+      <p class="not-found-code" aria-hidden="true">404</p>
+      <h1>Valse noot!</h1>
+      <p>Deze pagina bestaat niet (meer). Misschien zat er een typfout in het adres, of is de link verouderd.</p>
+      <p class="lang-en" lang="en">Wrong note! This page doesn't exist. The link may be outdated or mistyped.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/">Naar de homepage</a>
+        <a class="btn btn-secondary" href="/#contact">Contact</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -77,7 +77,7 @@
       "meta.ogDescription": "Energetische live covers voor trouwfeesten, festivals, privéfeesten, cafés en bedrijfsevents.",
       "meta.ogImageAlt": "Shadies & The Lady live op het podium",
 
-      "brand.homeAria": "Ga naar home sectie",
+      "brand.homeAria": "Shadies & The Lady – naar boven",
       "nav.toggleAria": "Open navigatiemenu",
       "nav.mainAria": "Hoofdnavigatie",
       "lang.aria": "Taalkeuze",
@@ -95,6 +95,7 @@
       "hero.ctaPrimary": "Boek de Band",
       "hero.ctaSecondary": "Bekijk Optredens",
       "hero.photoAlt": "Shadies & The Lady live op het podium",
+      "hero.listen": "Beluister onze teaser",
 
       "band.title": "Over de Band",
       "band.p1": "Wat begon als een gedeelde liefde voor muziek, groeide uit tot Shadies & The Lady: een enthousiaste pop- en rockcoverband uit Limburg.",
@@ -117,6 +118,11 @@
       "repertoire.classicsTitle": "Classics",
       "repertoire.ninetiesTitle": "90s / 00s",
       "repertoire.modernTitle": "Modern & Publieksfavorieten",
+
+      "listen.title": "Luister",
+      "listen.intro": "Een eerste voorproefje van hoe we klinken. Meer opnames volgen binnenkort.",
+      "listen.badge": "Teaser",
+      "listen.fallback": "Download de teaser (MP3)",
 
       "gigsBooking.title": "Optredens & Boeken",
       "gigs.title": "Aankomende Optredens",
@@ -211,7 +217,7 @@
       "meta.ogDescription": "Energetic live covers for weddings, festivals, private parties, pubs, and corporate events.",
       "meta.ogImageAlt": "Shadies & The Lady live on stage",
 
-      "brand.homeAria": "Go to home section",
+      "brand.homeAria": "Shadies & The Lady – back to top",
       "nav.toggleAria": "Open navigation menu",
       "nav.mainAria": "Main navigation",
       "lang.aria": "Language switcher",
@@ -229,6 +235,7 @@
       "hero.ctaPrimary": "Book the Band",
       "hero.ctaSecondary": "See Upcoming Gigs",
       "hero.photoAlt": "Shadies & The Lady live on stage",
+      "hero.listen": "Listen to our teaser",
 
       "band.title": "About the Band",
       "band.p1": "What started as a shared love of music grew into Shadies & The Lady: an enthusiastic pop and rock cover band from Limburg.",
@@ -251,6 +258,11 @@
       "repertoire.classicsTitle": "Classics",
       "repertoire.ninetiesTitle": "90s / 00s",
       "repertoire.modernTitle": "Modern & Crowd Favorites",
+
+      "listen.title": "Listen",
+      "listen.intro": "A first taste of how we sound. More recordings coming soon.",
+      "listen.badge": "Teaser",
+      "listen.fallback": "Download the teaser (MP3)",
 
       "gigsBooking.title": "Gigs & Booking",
       "gigs.title": "Upcoming Gigs",
@@ -1120,6 +1132,25 @@
     };
   }
 
+  // The hero "listen" link scrolls to the player (normal anchor) and starts the teaser.
+  function initializeTeaserLink() {
+    var audio = document.getElementById("teaserAudio");
+    if (!audio) {
+      return;
+    }
+
+    document.querySelectorAll("[data-play-teaser]").forEach(function (link) {
+      link.addEventListener("click", function () {
+        var playback = audio.play();
+        if (playback && typeof playback.catch === "function") {
+          playback.catch(function () {
+            /* Autoplay refused or file missing: the player is still there to press. */
+          });
+        }
+      });
+    });
+  }
+
   function setFormStatus(type, message) {
     var statusElement = document.getElementById("form-status");
     if (!statusElement) {
@@ -1281,6 +1312,7 @@
   initializeMemberBioToggle();
   initializeGigs();
   initializeGalleryLightbox();
+  initializeTeaserLink();
   initializeCopyEmail();
   initializeContactForm();
 })();

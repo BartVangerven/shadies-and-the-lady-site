@@ -21,10 +21,13 @@ No frameworks or build tools are required. Open `index.html` in a browser to pre
 
 ```
 index.html          Page structure, meta tags, JSON-LD band data
+404.html            "Page not found" page (GitHub Pages shows it for unknown addresses)
+favicon.ico         Fallback site icon for browsers and search engines
 css/style.css       All styling
 js/script.js        Translations, gig calendar, interactions
 assets/images/      Hero photo, headshots, gallery photos, posters, logo
 assets/fonts/       Self-hosted Bebas Neue and Manrope (SIL Open Font License)
+assets/audio/       Teaser recording (MP3) for the Listen section
 ```
 
 ## Main Features
@@ -39,6 +42,8 @@ assets/fonts/       Self-hosted Bebas Neue and Manrope (SIL Open Font License)
 - "Recently played" list built from past gigs
 - Event posters that expand to full size when clicked
 - Photo gallery with lightbox (arrows, swipe, Escape, keyboard support)
+- Listen section with the teaser recording; the hero link scrolls to it and starts playback
+- Custom 404 page
 - Contact form integrated with Formspree
 - Inline booking flow inside the form (3 steps)
 - Email copy-to-clipboard button
@@ -129,6 +134,20 @@ Translations are managed in `script.js` through a centralized dictionary. Langua
 preference is saved in browser local storage. Dates are formatted per language, so
 month abbreviations do not need translating by hand.
 
+## Audio
+
+The teaser lives at `assets/audio/shadies-and-the-lady-teaser.mp3` and is played by
+the `<audio>` element in the Listen section of `index.html`. The player uses
+`preload="none"`, so the file only downloads when someone presses play.
+
+To replace or add a recording:
+
+- Export or convert to MP3 (about 190 kbps VBR, 44.1 kHz). The teaser was made with
+  `ffmpeg -i input.wav -ar 44100 -c:a libmp3lame -q:a 2 output.mp3`.
+- Keep the original WAV files out of this folder. They are large (the teaser WAV is
+  69 MB) and GitHub's upload page refuses files over 25 MB.
+- Update the title and the length shown next to the player in `index.html`.
+
 ## Images
 
 - Hero photo: `assets/images/band-live-960.webp`, `-1600.webp` and `-2048.webp`
@@ -138,6 +157,9 @@ month abbreviations do not need translating by hand.
   (about 800px, 20-60 KB) and the original JPG, which opens in the lightbox. When
   adding a photo, add both and set `src` to the thumbnail and `data-full` to the JPG.
 - Headshots: `headshot-<name>.webp`, about 360px high
+- Site icons: `Shadies-and-the-lady_favicon.png` (32px), `favicon-96.png`,
+  `favicon-192.png`, `apple-touch-icon.png` (180px) and `/favicon.ico`. Google only
+  shows an icon in search results when one of them is at least 48px.
 - Posters: portrait orientation works best
 
 After changing the share image, refresh the cached preview through the
@@ -161,7 +183,7 @@ Current recommended release stage:
 
 ## Planned Next Improvements
 
-- YouTube video and demo recording
+- YouTube video in the Listen section
 - Optional technical rider as downloadable PDF (on request)
 - Optional captcha if spam appears
 - Optional analytics/privacy banner if needed

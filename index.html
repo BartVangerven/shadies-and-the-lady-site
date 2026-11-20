@@ -75,6 +75,8 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="canonical" href="https://www.shadiesandthelady.be/" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/Shadies-and-the-lady_favicon.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="assets/images/favicon-96.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon-192.png" />
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
 
   <script type="application/ld+json">
@@ -120,7 +122,7 @@
 <body>
   <header class="site-header">
     <div class="container nav-container">
-      <a class="brand" href="#home" aria-label="Ga naar home sectie" data-i18n-aria-label-key="brand.homeAria">
+      <a class="brand" href="#home" aria-label="Shadies &amp; The Lady – naar boven" data-i18n-aria-label-key="brand.homeAria">
         <img
           class="brand-logo"
           src="assets/images/Shadies-and-the-lady.svg"
@@ -189,6 +191,12 @@
             <a class="btn btn-primary" href="#contact" data-i18n-key="hero.ctaPrimary">Boek de Band</a>
             <a class="btn btn-secondary" href="#gigs-booking" data-i18n-key="hero.ctaSecondary">Bekijk Optredens</a>
           </div>
+          <a class="hero-listen" href="#listen" data-play-teaser>
+            <span class="hero-listen-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+            </span>
+            <span data-i18n-key="hero.listen">Beluister onze teaser</span>
+          </a>
         </div>
       </div>
     </section>
@@ -207,41 +215,41 @@
         <h3 class="subsection-title" data-i18n-key="band.membersTitle">Bandleden</h3>
 
         <div class="members-grid" id="membersGrid">
-          <article class="member-card member-toggle" data-member-id="diana" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
+          <div class="member-card member-toggle" data-member-id="diana" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
             <div class="member-photo member-photo-diana">
               <img src="assets/images/headshot-diana.webp" alt="Diana Braet" loading="lazy" />
             </div>
             <h4>Diana Braet</h4>
             <p data-i18n-key="role.singer">Zang</p>
-          </article>
-          <article class="member-card member-toggle" data-member-id="matthew" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
+          </div>
+          <div class="member-card member-toggle" data-member-id="matthew" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
             <div class="member-photo member-photo-matthew">
               <img src="assets/images/headshot-matthew.webp" alt="Matthew Coppens" loading="lazy" />
             </div>
             <h4>Matthew Coppens</h4>
             <p data-i18n-key="role.guitar">Gitaar</p>
-          </article>
-          <article class="member-card member-toggle" data-member-id="bart" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
+          </div>
+          <div class="member-card member-toggle" data-member-id="bart" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
             <div class="member-photo member-photo-bart">
               <img src="assets/images/headshot-bart.webp" alt="Bart Vangerven" loading="lazy" />
             </div>
             <h4>Bart Vangerven</h4>
             <p data-i18n-key="role.guitar">Gitaar</p>
-          </article>
-          <article class="member-card member-toggle" data-member-id="dirk" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
+          </div>
+          <div class="member-card member-toggle" data-member-id="dirk" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
             <div class="member-photo member-photo-dirk">
               <img src="assets/images/headshot-dirk.webp" alt="Dirk Geens" loading="lazy" />
             </div>
             <h4>Dirk Geens</h4>
             <p data-i18n-key="role.bass">Bas</p>
-          </article>
-          <article class="member-card member-toggle" data-member-id="philippe" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
+          </div>
+          <div class="member-card member-toggle" data-member-id="philippe" tabindex="0" role="button" aria-expanded="false" aria-controls="memberBioPanel">
             <div class="member-photo member-photo-philippe">
               <img src="assets/images/headshot-philippe.webp" alt="Philippe Pauwels" loading="lazy" />
             </div>
             <h4>Philippe Pauwels</h4>
             <p data-i18n-key="role.drums">Drums</p>
-          </article>
+          </div>
 
         </div>
         <article id="memberBioPanel" class="member-bio-panel" hidden aria-live="polite">
@@ -302,6 +310,24 @@
             </ul>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section id="listen" class="section reveal">
+      <div class="container">
+        <h2 data-i18n-key="listen.title">Luister</h2>
+        <p class="section-intro" data-i18n-key="listen.intro">Een eerste voorproefje van hoe we klinken. Meer opnames volgen binnenkort.</p>
+        <figure class="audio-card">
+          <figcaption class="audio-meta">
+            <span class="audio-badge" data-i18n-key="listen.badge">Teaser</span>
+            <span class="audio-title">Mashup</span>
+            <span class="audio-length">2:54</span>
+          </figcaption>
+          <!-- preload="none": the 4 MB file only downloads when someone presses play. -->
+          <audio id="teaserAudio" controls preload="none" src="assets/audio/shadies-and-the-lady-teaser.mp3">
+            <a href="assets/audio/shadies-and-the-lady-teaser.mp3" data-i18n-key="listen.fallback">Download de teaser (MP3)</a>
+          </audio>
+        </figure>
       </div>
     </section>
 
@@ -411,7 +437,7 @@
           <span class="contact-direct-sep" aria-hidden="true">|</span>
           <div class="contact-direct-row">
             <strong data-i18n-key="contact.socialLabel">Socials:</strong>
-            <div class="social-links" role="list">
+            <div class="social-links">
               <a
               class="social-link"
               href="https://www.facebook.com/people/Shadies-The-Lady/61582410604672/"
