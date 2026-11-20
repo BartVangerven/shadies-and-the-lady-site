@@ -23,23 +23,20 @@ No frameworks or build tools are required. Open `index.html` in a browser to pre
 index.html          Page structure, meta tags, JSON-LD band data
 css/style.css       All styling
 js/script.js        Translations, gig calendar, interactions
-style.css           Mirror of css/style.css (keep identical)
-script.js           Mirror of js/script.js (keep identical)
-assets/images/      Headshots, gallery photos, posters, logo
+assets/images/      Hero photo, headshots, gallery photos, posters, logo
+assets/fonts/       Self-hosted Bebas Neue and Manrope (SIL Open Font License)
 ```
-
-Note: the root-level `style.css` and `script.js` are duplicates of the versions in
-`css/` and `js/`. If you edit one, copy it over the other so both stay identical.
 
 ## Main Features
 
 - Responsive one-page layout
 - Sticky navigation with smooth scrolling
 - EN/NL bilingual interface (Dutch default)
-- Hero section with booking call-to-action
+- Hero section with a full-width band photo and booking call-to-action
 - Band section with expandable member bios
 - Repertoire in three clean song-list blocks (Classics, 90s/00s, Modern)
 - Self-maintaining gig calendar with automatic "next show" highlight
+- "Recently played" list built from past gigs
 - Event posters that expand to full size when clicked
 - Photo gallery with lightbox (arrows, swipe, Escape, keyboard support)
 - Contact form integrated with Formspree
@@ -49,6 +46,8 @@ Note: the root-level `style.css` and `script.js` are duplicates of the versions 
 - Footer with expandable Legal and Privacy/GDPR sections
 - JSON-LD structured data for the band and upcoming events
 - Respects the visitor's reduced-motion setting
+- Self-hosted fonts (no requests to Google Fonts)
+- Lightweight WebP thumbnails; the lightbox loads the full photo
 
 ## Updating the Gig Calendar
 
@@ -71,8 +70,10 @@ only place that needs editing.
 
 Behaviour worth knowing:
 
-- **Past gigs disappear automatically.** A gig stays listed for the whole of its own
-  day and drops off the next morning. Old entries can be deleted whenever convenient.
+- **Past gigs move to "Recently played" automatically.** A gig stays in the upcoming
+  list for the whole of its own day and moves the next morning. The six most recent
+  public gigs are shown, so keep past gigs in the array and delete the oldest ones
+  whenever convenient.
 - **The list sorts itself by date**, so new gigs can be added anywhere in the array.
 - **The next upcoming gig is featured automatically.** Add `featured: true` only to
   override this and headline a different gig.
@@ -80,8 +81,10 @@ Behaviour worth knowing:
   normal case for private bookings. Sizing is automatic: large on the featured card,
   compact on the others.
 - **`private: true`** keeps a gig visible on the site but out of the structured data,
-  so it will not appear in Google event results. Private gigs are also never featured.
-- If every gig has passed, the section shows a booking prompt instead of an empty gap.
+  so it will not appear in Google event results. Private gigs are also never featured
+  and are left out of "Recently played".
+- If every gig has passed, the section shows a booking prompt, followed by the
+  "Recently played" list.
 
 To add a poster, drop the image in `assets/images/` and reference it in the `poster`
 field. Filenames are case-sensitive on GitHub Pages, so they must match exactly.
@@ -93,6 +96,10 @@ with one entry per language. Both `nl` and `en` must contain the same keys, othe
 the raw key name will be shown to visitors.
 
 Member bios use `\n` to separate paragraphs.
+
+The Dutch text also appears in `index.html` (it is what search engines and visitors
+without JavaScript see). When you change a Dutch text in `script.js`, change it in
+`index.html` too so the two stay the same.
 
 ## Contact Form Setup
 
@@ -124,8 +131,13 @@ month abbreviations do not need translating by hand.
 
 ## Images
 
-- Social share preview: `assets/images/social-preview-logo.png` (1200x630)
-- Gallery photos: around 1600px wide, 250-600 KB
+- Hero photo: `assets/images/band-live-960.webp`, `-1600.webp` and `-2048.webp`
+  (three sizes of the same photo; the browser picks the right one)
+- Social share preview: `assets/images/social-preview-band.jpg` (1200x630)
+- Gallery photos: each photo has a small `-thumb.webp` version shown in the grid
+  (about 800px, 20-60 KB) and the original JPG, which opens in the lightbox. When
+  adding a photo, add both and set `src` to the thumbnail and `data-full` to the JPG.
+- Headshots: `headshot-<name>.webp`, about 360px high
 - Posters: portrait orientation works best
 
 After changing the share image, refresh the cached preview through the
@@ -137,10 +149,9 @@ After changing the share image, refresh the cached preview through the
 Recommended lightweight flow:
 
 1. Make focused changes in one update batch.
-2. Keep the root and subfolder copies of `script.js` and `style.css` identical.
-3. Commit with a clear message.
-4. Verify on GitHub Pages in both NL and EN.
-5. Tag stable milestones with releases.
+2. Commit with a clear message.
+3. Verify on GitHub Pages in both NL and EN.
+4. Tag stable milestones with releases.
 
 ## Release Status
 
@@ -150,7 +161,7 @@ Current recommended release stage:
 
 ## Planned Next Improvements
 
-- Full band photo for the hero and social preview
+- YouTube video and demo recording
 - Optional technical rider as downloadable PDF (on request)
 - Optional captcha if spam appears
 - Optional analytics/privacy banner if needed

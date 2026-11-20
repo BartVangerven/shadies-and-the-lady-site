@@ -4,7 +4,22 @@
   lightbox styles, and accessibility-friendly UI with reduced-motion support.
 */
 
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap");
+/* Fonts are self-hosted (no requests to Google), both under the SIL Open Font License. */
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/bebas-neue-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../assets/fonts/manrope-latin-variable.woff2") format("woff2");
+}
 
 :root {
   --color-bg: #050505;
@@ -260,34 +275,50 @@ p {
   margin-bottom: 1.4rem;
 }
 
-.hero {
-  min-height: calc(100vh - 66px);
-  display: grid;
-  align-items: center;
+/* Hero: full-width band photo with the text over a dark fade at the bottom. */
+.section.hero {
+  position: relative;
+  min-height: min(calc(100vh - 66px), 920px);
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.hero-layout {
-  display: grid;
-  grid-template-columns: 210px minmax(0, 1fr);
-  gap: 1.45rem;
-  align-items: center;
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #0b0908;
 }
 
-.hero-brandmark {
-  width: 198px;
-  height: 198px;
-  border-radius: 20px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(145deg, rgba(242, 196, 155, 0.16), rgba(207, 43, 33, 0.12));
-  border: 1px solid rgba(242, 196, 155, 0.35);
-  box-shadow: var(--shadow-soft);
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
 }
 
-.hero-logo {
-  width: 162px;
-  height: 162px;
-  object-fit: contain;
+.hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, #050505 0%, rgba(5, 5, 5, 0.82) 20%, rgba(5, 5, 5, 0.25) 48%, rgba(5, 5, 5, 0) 70%),
+    linear-gradient(90deg, rgba(20, 4, 3, 0.45) 0%, rgba(20, 4, 3, 0) 55%);
+}
+
+.hero-content {
+  padding-block: 8rem clamp(2.5rem, 6vh, 4.5rem);
+}
+
+.hero-copy h1 {
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.55);
+}
+
+.hero .lead {
+  color: #e6dcd3;
 }
 
 .eyebrow {
@@ -551,6 +582,44 @@ p {
 .gigs-empty {
   grid-column: 1 / -1;
   margin: 0;
+  color: var(--color-text-muted);
+}
+
+.gigs-recent {
+  grid-column: 1 / -1;
+  margin-top: 0.4rem;
+}
+
+.gigs-recent-list {
+  max-width: 760px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gigs-recent-list li {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.65rem 0.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gigs-recent-date {
+  color: var(--color-primary);
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+}
+
+.gigs-recent-name {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.gigs-recent-place {
   color: var(--color-text-muted);
 }
 
@@ -1383,20 +1452,38 @@ button:focus-visible {
     display: none;
   }
 
-  .hero-layout {
-    grid-template-columns: 1fr;
+  /* Narrow screens: photo on top at its own shape, text below it. */
+  .section.hero {
+    display: block;
+    min-height: 0;
+  }
+
+  .hero-media {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    aspect-ratio: 3 / 2;
+    background: none;
+  }
+
+  /* Fade the photo out so it blends into the page background. */
+  .hero-photo {
+    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+  }
+
+  .hero-media::after {
+    display: none;
+  }
+
+  .hero-content {
+    position: relative;
+    padding-block: 0.75rem 3rem;
     text-align: center;
   }
 
-  .hero-brandmark {
-    margin: 0 auto;
-    width: 156px;
-    height: 156px;
-  }
-
-  .hero-logo {
-    width: 124px;
-    height: 124px;
+  .hero .lead {
+    margin-inline: auto;
   }
 
   .hero-actions {
@@ -1495,6 +1582,15 @@ button:focus-visible {
 
   .gallery-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gigs-recent-list li {
+    grid-template-columns: 6.6rem minmax(0, 1fr);
+    gap: 0.1rem 0.8rem;
+  }
+
+  .gigs-recent-place {
+    grid-column: 2;
   }
 
   .contact-direct {

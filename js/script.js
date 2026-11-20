@@ -17,6 +17,7 @@
 
   var STORAGE_KEY = "shadies-site-language";
   var DEFAULT_LANGUAGE = "nl";
+  var MAX_RECENT_GIGS = 6;
   var SUPPORTED_LANGUAGES = ["en", "nl"];
   var memberBioRefreshHandler = null;
   var gigsRefreshHandler = null;
@@ -28,12 +29,12 @@
 
   /*
     Single source of truth for the gig calendar: cards and JSON-LD are both built from this.
-    date     ISO yyyy-mm-dd; past gigs drop off automatically and the list sorts itself
+    date     ISO yyyy-mm-dd; past gigs move to "Recently played" and the list sorts itself
     place    shown on the card
     venue    JSON-LD location name; omit together with city for private bookings
     poster   optional image; adds the click-to-enlarge poster button
     featured optional override; without it the soonest upcoming gig is featured
-    private  optional; keeps the gig off search engines and out of JSON-LD
+    private  optional; keeps the gig off search engines, out of JSON-LD and out of "Recently played"
   */
   var GIGS = [
     {
@@ -70,11 +71,11 @@
 
   var translations = {
     nl: {
-      "meta.title": "Shadies & The Lady | Pop & Rock Coverband Limburg Belgie",
-      "meta.description": "Shadies & The Lady is een all-round Belgische pop/rock coverband uit Limburg. Wij spelen op trouwfeesten, festivals, privefeesten, cafes en bedrijfsevents.",
-      "meta.ogTitle": "Shadies & The Lady | Pop & Rock Coverband Limburg Belgie",
-      "meta.ogDescription": "Energetische live covers voor trouwfeesten, festivals, privefeesten, cafes en bedrijfsevents.",
-      "meta.ogImageAlt": "Shadies & The Lady bandlogo",
+      "meta.title": "Shadies & The Lady | Pop & Rock Coverband Limburg België",
+      "meta.description": "Shadies & The Lady is een all-round Belgische pop/rock coverband uit Limburg. Wij spelen op trouwfeesten, festivals, privéfeesten, cafés en bedrijfsevents.",
+      "meta.ogTitle": "Shadies & The Lady | Pop & Rock Coverband Limburg België",
+      "meta.ogDescription": "Energetische live covers voor trouwfeesten, festivals, privéfeesten, cafés en bedrijfsevents.",
+      "meta.ogImageAlt": "Shadies & The Lady live op het podium",
 
       "brand.homeAria": "Ga naar home sectie",
       "nav.toggleAria": "Open navigatiemenu",
@@ -90,14 +91,15 @@
       "nav.book": "Boek Ons",
 
       "hero.eyebrow": "Belgische Pop/Rock Coverband",
-      "hero.lead": "Energetische live covers voor trouwfeesten, festivals, cafes, privefeesten en bedrijfsevents.",
+      "hero.lead": "Energetische live covers voor trouwfeesten, festivals, cafés, privéfeesten en bedrijfsevents.",
       "hero.ctaPrimary": "Boek de Band",
       "hero.ctaSecondary": "Bekijk Optredens",
+      "hero.photoAlt": "Shadies & The Lady live op het podium",
 
       "band.title": "Over de Band",
       "band.p1": "Wat begon als een gedeelde liefde voor muziek, groeide uit tot Shadies & The Lady: een enthousiaste pop- en rockcoverband uit Limburg.",
       "band.p2": "Met nummers uit verschillende decennia brengen we een mix van klassiekers, guilty pleasures, stevige rocksongs en moderne hits. We houden ervan om een publiek mee te nemen op een muzikale reis waarbij iedereen wel een nummer hoort dat herinneringen oproept.",
-      "band.p3": "Of het nu een festival, trouwfeest, cafe of bedrijfsevent is, we staan op het podium met een doel: mensen een fantastische avond bezorgen. Samen zingen, dansen en genieten van live muziek – dat is waar Shadies & The Lady voor staat.",
+      "band.p3": "Of het nu een festival, trouwfeest, café of bedrijfsevent is, we staan op het podium met een doel: mensen een fantastische avond bezorgen. Samen zingen, dansen en genieten van live muziek – dat is waar Shadies & The Lady voor staat.",
       "band.membersTitle": "Bandleden",
       "band.bio.diana": "Als kind kon Diana uren in de living staan meezingen met nummers van onder andere Clouseau, terwijl ze deed alsof ze op een podium stond.\n\nHet was dan ook niet verwonderlijk dat ze naar de muziekschool wilde. Als instrument koos ze voor saxofoon. Ook haar zang bleef ze verder ontwikkelen, onder andere door bij het kerkkoor te zingen en regelmatig de microfoon vast te nemen tijdens een karaokeavond.\n\nAls jongvolwassene kregen andere dingen voorrang en raakte muziek wat meer op de achtergrond. Het zingen beperkte zich vooral nog tot de momenten onder de douche.\n\nTot ze enkele jaren geleden haar passie voor muziek herontdekte. Ze besloot opnieuw volop voor haar kinderdroom te gaan en van zingen weer een belangrijk deel van haar leven te maken.\n\nHaar grootste passie blijft zang, maar onder het motto \"je bent nooit te oud om te leren\" besloot ze begin 2025 ook akoestische gitaar te leren spelen.\n\nWant stilzitten? Dat is duidelijk niets voor Diana.",
       "band.bio.matthew": "Matthew ontdekte al op jonge leeftijd zijn liefde voor muziek aan de muziekschool. Zijn interesse verschoof al snel naar gitaar, aangewakkerd door bands als Ramones, Led Zeppelin en AC/DC. De klassieke lessen sloten echter steeds minder aan bij zijn muzikale smaak, die duidelijk richting rock en elektrische gitaar evolueerde. En eerlijk is eerlijk: als tiener had hij ook wel andere dingen aan zijn hoofd.\nDe gitaar verdween daarna bijna vijftien jaar uit beeld. Pas op zijn 28ste, dankzij zijn vader, vond Matthew de weg terug naar het instrument. Achteraf bekeken een van de beste beslissingen die hij ooit nam.\nSindsdien is gitaar spelen uitgegroeid tot een echte passie. Hij blijft voortdurend experimenteren met nieuwe sounds, technieken en materiaal, altijd op zoek naar dat beetje extra dat een nummer nog beter laat klinken. Die nieuwsgierigheid en liefde voor muziek hoor je terug in elk optreden van Shadies & The Lady.",
@@ -123,6 +125,7 @@
       "gigs.posterCta": "Affiche",
       "gigs.posterAria": "Bekijk de affiche van",
       "gigs.none": "Momenteel staan er geen optredens gepland. Neem contact op om ons te boeken.",
+      "gigs.recentTitle": "Recent gespeeld",
 
       "booking.step1Title": "Neem contact op",
       "booking.step2Title": "Ontvang voorstel",
@@ -162,7 +165,7 @@
       "form.lastNameLabel": "Achternaam",
       "form.emailLabel": "E-mail",
       "form.phoneCodeLabel": "Landcode",
-      "form.phoneCodeBE": "BE +32 Belgie",
+      "form.phoneCodeBE": "BE +32 België",
       "form.phoneCodeNL": "NL +31 Nederland",
       "form.phoneCodeFR": "FR +33 Frankrijk",
       "form.phoneCodeDE": "DE +49 Duitsland",
@@ -173,11 +176,11 @@
       "form.selectDefault": "Selecteer",
       "form.eventWedding": "Trouwfeest",
       "form.eventFestival": "Festival",
-      "form.eventPrivate": "Privefeest",
+      "form.eventPrivate": "Privéfeest",
       "form.eventCorporate": "Bedrijfsevent",
       "form.eventOther": "Anders",
-      "form.dateLabel": "Datum",
-      "form.locationLabel": "Locatie",
+      "form.dateLabel": "Datum (indien gekend)",
+      "form.locationLabel": "Locatie (indien gekend)",
       "form.messageLabel": "Bericht",
       "form.specialRequestsLabel": "Speciale wensen of verzoeknummers",
       "form.optionalDetailsSummary": "Extra details (optioneel)",
@@ -192,7 +195,7 @@
       "form.invalid": "Controleer de verplichte velden en probeer opnieuw.",
 
       "copy.success": "E-mailadres gekopieerd.",
-      "copy.error": "Kopieren niet gelukt. Selecteer en kopieer handmatig.",
+      "copy.error": "Kopiëren niet gelukt. Selecteer en kopieer handmatig.",
 
       "footer.legalLink": "Juridisch",
       "footer.privacyLink": "Privacy & GDPR",
@@ -206,7 +209,7 @@
       "meta.description": "Shadies & The Lady is an all-round Belgian pop/rock cover band from Limburg. We play at weddings, festivals, private parties, pubs, and corporate events.",
       "meta.ogTitle": "Shadies & The Lady | Pop & Rock Cover Band Limburg Belgium",
       "meta.ogDescription": "Energetic live covers for weddings, festivals, private parties, pubs, and corporate events.",
-      "meta.ogImageAlt": "Shadies & The Lady band logo",
+      "meta.ogImageAlt": "Shadies & The Lady live on stage",
 
       "brand.homeAria": "Go to home section",
       "nav.toggleAria": "Open navigation menu",
@@ -225,6 +228,7 @@
       "hero.lead": "Energetic live covers for weddings, festivals, pubs, private parties, and corporate events.",
       "hero.ctaPrimary": "Book the Band",
       "hero.ctaSecondary": "See Upcoming Gigs",
+      "hero.photoAlt": "Shadies & The Lady live on stage",
 
       "band.title": "About the Band",
       "band.p1": "What started as a shared love of music grew into Shadies & The Lady: an enthusiastic pop and rock cover band from Limburg.",
@@ -255,6 +259,7 @@
       "gigs.posterCta": "Poster",
       "gigs.posterAria": "View the poster for",
       "gigs.none": "No gigs are currently scheduled. Get in touch to book us.",
+      "gigs.recentTitle": "Recently Played",
 
       "booking.step1Title": "Contact Us",
       "booking.step2Title": "Receive Proposal",
@@ -308,8 +313,8 @@
       "form.eventPrivate": "Private party",
       "form.eventCorporate": "Corporate event",
       "form.eventOther": "Other",
-      "form.dateLabel": "Date",
-      "form.locationLabel": "Location",
+      "form.dateLabel": "Date (if known)",
+      "form.locationLabel": "Location (if known)",
       "form.messageLabel": "Message",
       "form.specialRequestsLabel": "Special requests or song wishes",
       "form.optionalDetailsSummary": "Additional details (optional)",
@@ -559,6 +564,20 @@
     });
   }
 
+  // Public gigs that already happened, most recent first. Shown as "Recently played".
+  function getRecentGigs() {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var todayStamp = today.getTime();
+
+    return GIGS.filter(function (gig) {
+      var stamp = parseGigDate(gig.date);
+      return !gig.private && !isNaN(stamp) && stamp < todayStamp;
+    }).sort(function (first, second) {
+      return parseGigDate(second.date) - parseGigDate(first.date);
+    }).slice(0, MAX_RECENT_GIGS);
+  }
+
   function getFeaturedIndex(gigs) {
     var firstPublic = -1;
 
@@ -669,6 +688,43 @@
     return card;
   }
 
+  function buildRecentGigs(gigs, lang) {
+    var wrapper = document.createElement("div");
+    wrapper.className = "gigs-recent";
+
+    var heading = document.createElement("h3");
+    heading.className = "subsection-title";
+    heading.textContent = t("gigs.recentTitle", lang);
+    wrapper.appendChild(heading);
+
+    var list = document.createElement("ul");
+    list.className = "gigs-recent-list";
+
+    gigs.forEach(function (gig) {
+      var item = document.createElement("li");
+
+      var date = document.createElement("span");
+      date.className = "gigs-recent-date";
+      date.textContent = formatGigDate(gig.date, lang);
+      item.appendChild(date);
+
+      var name = document.createElement("span");
+      name.className = "gigs-recent-name";
+      name.textContent = gig.title;
+      item.appendChild(name);
+
+      var place = document.createElement("span");
+      place.className = "gigs-recent-place";
+      place.textContent = gig.place;
+      item.appendChild(place);
+
+      list.appendChild(item);
+    });
+
+    wrapper.appendChild(list);
+    return wrapper;
+  }
+
   function renderGigStructuredData() {
     var container = document.getElementById("gigsStructuredData");
     if (!container) {
@@ -712,6 +768,7 @@
     function renderGigs(language) {
       var lang = isSupportedLanguage(language) ? language : DEFAULT_LANGUAGE;
       var upcoming = getUpcomingGigs();
+      var recent = getRecentGigs();
       var featuredIndex = getFeaturedIndex(upcoming);
 
       timeline.innerHTML = "";
@@ -722,12 +779,15 @@
         empty.setAttribute("data-i18n-key", "gigs.none");
         empty.textContent = t("gigs.none", lang);
         timeline.appendChild(empty);
-        return;
       }
 
       upcoming.forEach(function (gig, index) {
         timeline.appendChild(buildGigCard(gig, lang, index === featuredIndex));
       });
+
+      if (recent.length > 0) {
+        timeline.appendChild(buildRecentGigs(recent, lang));
+      }
     }
 
     renderGigs(document.documentElement.getAttribute("data-current-lang"));
@@ -783,7 +843,8 @@
           if (!image) {
             return null;
           }
-          return { src: image.src, caption: image.alt };
+          // Grid shows a small thumbnail; the lightbox loads the full photo.
+          return { src: image.getAttribute("data-full") || image.src, caption: image.alt };
         })
         .filter(Boolean);
     }
@@ -1149,7 +1210,10 @@
 
     var dateField = document.getElementById("eventDate");
     if (dateField && !dateField.getAttribute("min")) {
-      dateField.setAttribute("min", new Date().toISOString().slice(0, 10));
+      // Local date, so the minimum is never "yesterday" shortly after midnight.
+      var now = new Date();
+      var localToday = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+      dateField.setAttribute("min", localToday);
     }
 
     form.addEventListener("submit", function (event) {
