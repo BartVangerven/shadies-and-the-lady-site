@@ -147,8 +147,8 @@ To replace or add a recording:
 
 - Export or convert to MP3 (about 190 kbps VBR, 44.1 kHz). The teaser was made with
   `ffmpeg -i input.wav -ar 44100 -c:a libmp3lame -q:a 2 output.mp3`.
-- Keep the original WAV files out of this folder. They are large (the teaser WAV is
-  69 MB) and GitHub's upload page refuses files over 25 MB.
+- Keep the original WAV files out of this folder. They are large (the teaser master is
+  about 50 MB) and GitHub's upload page refuses files over 25 MB.
 - Update the title, `data-duration` (in seconds) and the time shown in the player in
   `index.html`.
 
